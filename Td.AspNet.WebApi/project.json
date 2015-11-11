@@ -1,0 +1,22 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Td.AspNet.WebApi Class Library",
+  "authors": [ "hibru" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "dnx451": {
+    },
+    "dnxcore50": {
+    }
+  },
+  "dependencies": {
+    "Microsoft.AspNet.Mvc.Abstractions": "6.0.0-beta8",
+    "Microsoft.AspNet.Mvc.Core": "6.0.0-beta8",
+    "Microsoft.AspNet.Mvc": "6.0.0-beta8",
+    "Microsoft.Net.Http.Headers": "1.0.0-rc1-15798",
+    "System.Net.Http": "4.0.1-beta-23409",
+    "Td.AspNet.Utils": "1.0.0-*"
+  }
+}
