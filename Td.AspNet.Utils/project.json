@@ -1,7 +1,7 @@
 ﻿{
-  "version": "1.0.0-*",
-  "description": "Td.AspNet.Utils Class Library",
-  "authors": [ "hibru" ],
+  "version": "1.0.0-2",
+  "description": "AspNet 5 Web 项目的公共类库方法",
+  "authors": [ "明月" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",

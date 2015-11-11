@@ -1,7 +1,7 @@
 ﻿{
-  "version": "1.0.0-*",
-  "description": "Td.AspNet.WebApi Class Library",
-  "authors": [ "hibru" ],
+  "version": "1.0.0-2",
+  "description": "AspNet 5 WebApi 需要用到的公共类库和方法",
+  "authors": [ "明月" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
