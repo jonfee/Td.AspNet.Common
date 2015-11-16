@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-2",
+  "version": "1.0.3-beta1",
   "description": "AspNet 5 Web 项目的公共类库方法",
   "authors": [ "明月" ],
   "tags": [ "" ],
@@ -10,8 +10,8 @@
     "dnxcore50": { }
   },
   "dependencies": {
-    "Microsoft.AspNet.Http": "1.0.0-rc1-15798",
-    "Microsoft.Framework.Caching.Abstractions": "1.0.0-rc1-15658",
-    "Microsoft.Framework.Caching.Memory": "1.0.0-rc1-15658"
+    "Microsoft.AspNet.Http": "1.0.0-beta8",
+    "Microsoft.Framework.Caching.Abstractions": "1.0.0-beta8",
+    "Microsoft.Framework.Caching.Memory": "1.0.0-beta8"
   }
 }
