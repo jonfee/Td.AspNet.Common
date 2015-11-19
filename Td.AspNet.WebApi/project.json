@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.4-rc1",
+  "version": "1.0.5-rc1",
   "description": "AspNet 5 WebApi 需要用到的公共类库和方法",
   "authors": [ "明月" ],
   "tags": [ "" ],

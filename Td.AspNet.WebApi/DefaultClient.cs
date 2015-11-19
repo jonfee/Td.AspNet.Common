@@ -39,7 +39,7 @@ namespace Td.AspNet.WebApi
 
                     }
                 }
-                catch { }
+                catch (Exception ex){ }
             }
             return txt;
         }
@@ -52,7 +52,7 @@ namespace Td.AspNet.WebApi
         /// <param name="partnerid">合作者或模块ID</param>
         /// <param name="secretKey">加密参数</param>
         /// <returns></returns>
-        private static async Task<string> DoPost(string url, IDictionary<string, string> parameters, string partnerid, string secretKey)
+        public static async Task<string> DoPost(string url, IDictionary<string, string> parameters, string partnerid, string secretKey)
         {
 
             IDictionary<string, string> txtParams = new Dictionary<string, string>(parameters);
@@ -80,11 +80,15 @@ namespace Td.AspNet.WebApi
             var txt = string.Empty;
             using (client = new HttpClient())
             {
-                var response = await client.PostAsync(url, content);
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    txt = await response.Content.ReadAsStringAsync();
+                    var response = await client.PostAsync(url, content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        txt = await response.Content.ReadAsStringAsync();
+                    }
                 }
+                catch (Exception ex) { }
             }
             return txt;
         }
