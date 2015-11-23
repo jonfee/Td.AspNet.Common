@@ -29,6 +29,7 @@ namespace Td.AspNet.Utils
                 if (mi != null && mi.IsPublic)
                 {
                     value = mi.Invoke(o, new string[] { });
+
                     if (value != null)
                     {
                         map.Add(p.Name, value.ToString());
