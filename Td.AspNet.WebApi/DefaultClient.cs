@@ -46,7 +46,10 @@ namespace Td.AspNet.WebApi
                     if (response.IsSuccessStatusCode)
                     {
                         txt = await response.Content.ReadAsStringAsync();
-
+                    }
+                    else
+                    {
+                        txt = response.StatusCode.ToString();
                     }
                 }
                 catch (Exception ex)
@@ -106,6 +109,10 @@ namespace Td.AspNet.WebApi
                     if (response.IsSuccessStatusCode)
                     {
                         txt = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        txt = response.StatusCode.ToString();
                     }
                 }
                 catch (Exception ex)
@@ -181,6 +188,10 @@ namespace Td.AspNet.WebApi
                     if (response.IsSuccessStatusCode)
                     {
                         txt = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        txt = response.StatusCode.ToString();
                     }
                 }
                 catch (Exception ex)
