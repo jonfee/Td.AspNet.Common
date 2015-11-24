@@ -49,12 +49,12 @@ namespace Td.AspNet.WebApi
                     }
                     else
                     {
-                        txt = response.StatusCode.ToString();
+                        txt = string.Format("HTTP状态：{0}，请求信息：{1}", response.StatusCode, response.RequestMessage, response.Content.ToString());
                     }
                 }
                 catch (Exception ex)
                 {
-                    txt = ex.Message;
+                    txt = string.Format("错误信息：{0}，具体错误：{1}", ex.Message, ex.InnerException);
                 }
             }
             return txt;
@@ -112,12 +112,12 @@ namespace Td.AspNet.WebApi
                     }
                     else
                     {
-                        txt = response.StatusCode.ToString();
+                        txt = string.Format("HTTP状态：{0}，请求信息：{1}", response.StatusCode, response.RequestMessage, response.Content.ToString());
                     }
                 }
                 catch (Exception ex)
                 {
-                    txt = ex.Message;
+                    txt = string.Format("错误信息：{0}，具体错误：{1}", ex.Message, ex.InnerException);
                 }
             }
             return txt;
@@ -191,12 +191,12 @@ namespace Td.AspNet.WebApi
                     }
                     else
                     {
-                        txt = response.StatusCode.ToString();
+                        txt = string.Format("HTTP状态：{0}，请求信息：{1}", response.StatusCode, response.RequestMessage, response.Content.ToString());
                     }
                 }
                 catch (Exception ex)
                 {
-                    txt = ex.Message;
+                    txt = string.Format("错误信息：{0}，具体错误：{1}", ex.Message, ex.InnerException);
                 }
             }
             return txt;
