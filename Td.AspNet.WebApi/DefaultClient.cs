@@ -49,7 +49,10 @@ namespace Td.AspNet.WebApi
 
                     }
                 }
-                catch (Exception ex) { }
+                catch (Exception ex)
+                {
+                    txt = ex.Message;
+                }
             }
             return txt;
         }
