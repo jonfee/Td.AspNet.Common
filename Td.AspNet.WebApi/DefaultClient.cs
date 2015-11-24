@@ -30,7 +30,7 @@ namespace Td.AspNet.WebApi
             }
 
             txtParams.Add("PartnerId", partnerId);
-            txtParams.Add("Timestamp", DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+            txtParams.Add("Timestamp", DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
             txtParams.Add("Sign", Strings.SignRequest(txtParams, secretKey));
 
             url = Strings.BuildGetUrl(url, txtParams);
@@ -75,7 +75,7 @@ namespace Td.AspNet.WebApi
             }
             IDictionary<string, string> urlParams = new Dictionary<string, string>();
             urlParams.Add("PartnerId", partnerid);
-            urlParams.Add("Timestamp", DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+            urlParams.Add("Timestamp", DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
 
             foreach (var item in urlParams)
             {
@@ -105,7 +105,10 @@ namespace Td.AspNet.WebApi
                         txt = await response.Content.ReadAsStringAsync();
                     }
                 }
-                catch (Exception ex) { }
+                catch (Exception ex)
+                {
+                    txt = ex.Message;
+                }
             }
             return txt;
         }
@@ -177,7 +180,10 @@ namespace Td.AspNet.WebApi
                         txt = await response.Content.ReadAsStringAsync();
                     }
                 }
-                catch (Exception ex) { }
+                catch (Exception ex)
+                {
+                    txt = ex.Message;
+                }
             }
             return txt;
         }
