@@ -26,7 +26,7 @@ namespace Td.AspNet.Upload
                 var file = context.FormFile;
 
                 //保存后的文件名称
-                var newFileName = context.UploadFileName;
+                var newFileName = context.UploadName;
 
                 if (string.IsNullOrWhiteSpace(newFileName))
                 {
@@ -45,19 +45,23 @@ namespace Td.AspNet.Upload
                 newFileName = newFileName + Path.GetExtension(originalName);
 
                 //文件夹不存在,则创建
-                if (!Directory.Exists(context.UploadFileFolder))
+                if (!Directory.Exists(context.UploadFolder))
                 {
-                    Directory.CreateDirectory(context.UploadFileFolder);
+                    Directory.CreateDirectory(context.UploadFolder);
                 }
-                string saveFilePath = Path.Combine(context.UploadFileFolder, newFileName);
+                //文件相对站点的路径
+                string relFilePath = Path.Combine(context.UploadFolder, newFileName);
 
-                await context.FormFile.SaveAsAsync(saveFilePath);
+                //文件在磁盘中的路径
+                string absFilePath = Path.Combine(context.WebRootPath, relFilePath);
+
+                await context.FormFile.SaveAsAsync(absFilePath);
 
                 result = new UploadResult
                 {
                     FieldName = parsedContentDisposition.Name,
                     FileName = newFileName,
-                    FilePath = saveFilePath,
+                    FilePath = relFilePath,
                     FileSize = file.Length,
                     ContentType = file.ContentType,
                     IsImage = file.ContentType.IsImage()
