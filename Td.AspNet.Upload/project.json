@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.0.0-rc1-1",
   "description": "Td.AspNet.Upload Class Library",
   "authors": [ "jonfee" ],
   "tags": [ "" ],
