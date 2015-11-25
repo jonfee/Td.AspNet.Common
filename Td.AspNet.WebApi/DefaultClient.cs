@@ -49,12 +49,12 @@ namespace Td.AspNet.WebApi
                     }
                     else
                     {
-                        txt = string.Format("HTTP状态：{0}，请求信息：{1}", response.StatusCode, response.RequestMessage, response.Content.ToString());
+                        txt = ErrorInfo(response.StatusCode.ToString(), response.RequestMessage.ToString());
                     }
                 }
                 catch (Exception ex)
                 {
-                    txt = string.Format("错误信息：{0}，具体错误：{1}", ex.Message, ex.InnerException);
+                    txt = ErrorInfo(ex.Message, ex.InnerException.Message);
                 }
             }
             return txt;
@@ -72,7 +72,7 @@ namespace Td.AspNet.WebApi
         {
             if (parameters == null)
             {
-                return string.Format("错误信息：提交数据异常，具体错误：POST表单数据值不存在");
+                return ErrorInfo("提交数据异常", "POST表单数据值不存在");
             }
 
             IDictionary<string, string> txtParams = new Dictionary<string, string>(parameters);
@@ -110,12 +110,12 @@ namespace Td.AspNet.WebApi
                     }
                     else
                     {
-                        txt = string.Format("HTTP状态：{0}，请求信息：{1}", response.StatusCode, response.RequestMessage, response.Content.ToString());
+                        txt = ErrorInfo(response.StatusCode.ToString(), response.RequestMessage.ToString());
                     }
                 }
                 catch (Exception ex)
                 {
-                    txt = string.Format("错误信息：{0}，具体错误：{1}", ex.Message, ex.InnerException);
+                    txt = ErrorInfo(ex.Message, ex.InnerException.Message);
                 }
             }
             return txt;
@@ -134,7 +134,8 @@ namespace Td.AspNet.WebApi
         {
             if (parameters == null && files.Count == 0)
             {
-                return string.Format("错误信息：提交数据异常，具体错误：POST表单数据值或上传的文件对象同时不存在");
+                return ErrorInfo("提交数据异常", "POST表单数据值或上传的文件对象同时不存在");
+                
             }
             if (parameters == null)
             {
@@ -190,15 +191,24 @@ namespace Td.AspNet.WebApi
                     }
                     else
                     {
-                        txt = string.Format("HTTP状态：{0}，请求信息：{1}", response.StatusCode, response.RequestMessage, response.Content.ToString());
+                        txt = ErrorInfo(response.StatusCode.ToString(), response.RequestMessage.ToString());
                     }
                 }
                 catch (Exception ex)
                 {
-                    txt = string.Format("错误信息：{0}，具体错误：{1}", ex.Message, ex.InnerException);
+                    txt = ErrorInfo(ex.Message, ex.InnerException.Message);
                 }
             }
             return txt;
+        }
+
+        public static string ErrorInfo(string message, string content)
+        {
+            ErrorMessage error = new ErrorMessage();
+            error.Code = 100;
+            error.Message = string.Format("错误信息：{0}", message);
+            error.Content = string.Format("具体错误：{0}", content);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(error);
         }
     }
 }
