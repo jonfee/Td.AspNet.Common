@@ -70,15 +70,13 @@ namespace Td.AspNet.WebApi
         /// <returns></returns>
         public static async Task<string> DoPost(string url, IDictionary<string, string> parameters, string partnerid, string secretKey)
         {
-            IDictionary<string, string> txtParams;
-            if (parameters != null)
+            if (parameters == null)
             {
-                txtParams = new Dictionary<string, string>(parameters);
+                return string.Format("错误信息：提交数据异常，具体错误：POST表单数据值不存在");
             }
-            else
-            {
-                txtParams = new Dictionary<string, string>();
-            }
+
+            IDictionary<string, string> txtParams = new Dictionary<string, string>(parameters);
+
             IDictionary<string, string> urlParams = new Dictionary<string, string>();
             urlParams.Add("PartnerId", partnerid);
             urlParams.Add("Timestamp", DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
@@ -134,15 +132,16 @@ namespace Td.AspNet.WebApi
         /// <returns></returns>
         public static async Task<string> DoPost(string url, IDictionary<string, string> parameters, List<FileContent> files, string partnerid, string secretKey)
         {
-            IDictionary<string, string> txtParams;
-            if (parameters != null)
+            if (parameters == null && files.Count == 0)
             {
-                txtParams = new Dictionary<string, string>(parameters);
+                return string.Format("错误信息：提交数据异常，具体错误：POST表单数据值或上传的文件对象同时不存在");
             }
-            else
+            if (parameters == null)
             {
-                txtParams = new Dictionary<string, string>();
+                parameters = new Dictionary<string, string>();
             }
+            IDictionary<string, string> txtParams = new Dictionary<string, string>(parameters);
+
             IDictionary<string, string> urlParams = new Dictionary<string, string>();
             urlParams.Add("PartnerId", partnerid);
             urlParams.Add("Timestamp", DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
