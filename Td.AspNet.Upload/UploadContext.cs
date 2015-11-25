@@ -46,50 +46,7 @@ namespace Td.AspNet.Upload
         /// <returns></returns>
         public async Task<UploadResult> Save()
         {
-            UploadResult result = null;
-
-            if (FormFile.Length > 0)
-            {
-                //保存后的文件名称
-                var newFileName = UploadFileName;
-
-                if (string.IsNullOrWhiteSpace(newFileName))
-                {
-                    string rnd = GetRandomCode(10);
-                    newFileName = string.Format("{0}{1}", DateTime.Now.ToString("HHmmss"), rnd);
-                }
-
-                //文件内容信息
-                var parsedContentDisposition =
-                      ContentDispositionHeaderValue.Parse(FormFile.ContentDisposition);
-
-                //原始文件名称
-                var originalName = parsedContentDisposition.FileName.Replace("\"", "");
-
-                //文件全名（含扩展名）
-                newFileName = newFileName + Path.GetExtension(originalName);
-
-                //文件夹不存在,则创建
-                if (!Directory.Exists(UploadFileFolder))
-                {
-                    Directory.CreateDirectory(UploadFileFolder);
-                }
-                string saveFilePath = Path.Combine(UploadFileFolder, newFileName);
-
-                await FormFile.SaveAsAsync(saveFilePath);
-
-                result = new UploadResult
-                {
-                    FieldName = parsedContentDisposition.Name,
-                    FileName = newFileName,
-                    FilePath = saveFilePath,
-                    FileSize = FormFile.Length,
-                    ContentType = FormFile.ContentType,
-                    IsImage = IsImage(FormFile.ContentType)
-                };
-            }
-
-            return result;
+            return await this.Save();
         }
 
         /// <summary>
