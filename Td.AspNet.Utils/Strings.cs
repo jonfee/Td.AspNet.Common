@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Td.AspNet.Utils
@@ -75,7 +75,8 @@ namespace Td.AspNet.Utils
 
                     postData.Append(name);
                     postData.Append("=");
-                    postData.Append(value);//在没有找到asp.net 5中如何URL编码之前直接输出
+                    //postData.Append(value);//在没有找到asp.net 5中如何URL编码之前直接输出
+                    postData.Append(WebUtility.UrlEncode(value));
                     //postData.Append(HttpUtility.UrlEncode(value, Encoding.UTF8));
                     hasParam = true;
                 }
