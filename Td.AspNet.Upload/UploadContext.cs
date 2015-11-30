@@ -22,6 +22,7 @@ namespace Td.AspNet.Upload
             this.FormFile = file;
             this.UploadFolder = uploadFolder;
             this.UploadName = uploadName;
+            this.WebRootPath = webrootPath;
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace Td.AspNet.Upload
         /// <summary>
         /// 站点根目录
         /// </summary>
-        public string WebRootPath { get; set; }
+        public string WebRootPath { get; private set; }
 
         /// <summary>
         /// 文件保存的文件夹路径
