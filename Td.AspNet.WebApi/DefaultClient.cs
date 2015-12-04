@@ -30,7 +30,7 @@ namespace Td.AspNet.WebApi
             }
 
             txtParams.Add("PartnerId", partnerId);
-            txtParams.Add("Timestamp", DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+            txtParams.Add("Timestamp", DateTime.Now.ToUniversalTime().Ticks.ToString());//时间戳以时间周期数表示
             txtParams.Add("Sign", Strings.SignRequest(txtParams, secretKey));
 
             url = Strings.BuildGetUrl(url, txtParams);
@@ -76,10 +76,10 @@ namespace Td.AspNet.WebApi
             }
 
             IDictionary<string, string> txtParams = new Dictionary<string, string>(parameters);
-
+            
             IDictionary<string, string> urlParams = new Dictionary<string, string>();
             urlParams.Add("PartnerId", partnerid);
-            urlParams.Add("Timestamp", DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+            urlParams.Add("Timestamp", DateTime.Now.ToUniversalTime().Ticks.ToString());//时间戳以时间周期数表示
 
             foreach (var item in urlParams)
             {
@@ -135,17 +135,18 @@ namespace Td.AspNet.WebApi
             if (parameters == null && files.Count == 0)
             {
                 return ErrorInfo("提交数据异常", "POST表单数据值或上传的文件对象同时不存在");
-                
+
             }
             if (parameters == null)
             {
                 parameters = new Dictionary<string, string>();
             }
             IDictionary<string, string> txtParams = new Dictionary<string, string>(parameters);
-
+            
+            TimeSpan timeSpan = new TimeSpan(DateTime.UtcNow.Ticks);
             IDictionary<string, string> urlParams = new Dictionary<string, string>();
             urlParams.Add("PartnerId", partnerid);
-            urlParams.Add("Timestamp", DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+            urlParams.Add("Timestamp", DateTime.Now.ToUniversalTime().Ticks.ToString());//时间戳以时间周期数表示
 
             foreach (var item in urlParams)
             {
