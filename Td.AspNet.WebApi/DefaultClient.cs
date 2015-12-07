@@ -30,6 +30,7 @@ namespace Td.AspNet.WebApi
             }
 
             txtParams.Add("PartnerId", partnerId);
+            //txtParams.Add("Timestamp", System.DateTime);
             txtParams.Add("Timestamp", DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'"));
             txtParams.Add("Sign", Strings.SignRequest(txtParams, secretKey));
 
