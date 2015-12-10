@@ -38,6 +38,11 @@ namespace Td.AspNet.Utils
 
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
         private static double rad(double d)
         {
             return d * Math.PI / 180.0;
