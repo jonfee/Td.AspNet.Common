@@ -39,7 +39,7 @@ namespace Td.AspNet.Utils
         }
         
         /// <summary>
-        /// 
+        /// 获取
         /// </summary>
         /// <param name="d"></param>
         /// <returns></returns>
