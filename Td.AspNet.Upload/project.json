@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0-rc1-7",
-  "description": "Td.AspNet.Upload Class Library",
+  "version": "1.0.0-rc1-8",
+  "description": "文件上传组件",
   "authors": [ "jonfee" ],
   "tags": [ "" ],
   "projectUrl": "",

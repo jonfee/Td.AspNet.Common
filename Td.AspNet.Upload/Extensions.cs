@@ -59,16 +59,22 @@ namespace Td.AspNet.Upload
                     //更新文件相对站点的路径，如：\\upload\\photo\\aa.jpg
                     relFilePath = Path.Combine(context.UploadFolder, newFileName);
                 }
-
-                //文件在磁盘中的路径，如：D:\\WebSite\\wwwroot\\upload\\photo\\aa.jpg
-                string absFileName = Path.Combine(context.WebRootPath, relFilePath);
-
                 //文件夹不存在,则创建
                 if (!Directory.Exists(context.UploadFolder))
                 {
                     Directory.CreateDirectory(context.UploadFolder);
                 }
 
+                //文件在磁盘中的路径，如：D:\\WebSite\\wwwroot\\upload\\photo\\aa.jpg
+                string absFileName = Path.Combine(context.WebRootPath, relFilePath);
+
+                //存在同名文件且需要覆盖时删除原文件
+                if (File.Exists(absFileName) && context.BeOverride)
+                {
+                    File.Delete(absFileName);
+                }
+
+                //上传
                 await context.FormFile.SaveAsAsync(absFileName);
 
                 result = new UploadResult
