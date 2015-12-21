@@ -22,5 +22,10 @@ namespace Td.AspNet.WebApi
         /// 文件流
         /// </summary>
         public Stream FileStream { get; set; }
+
+        /// <summary>
+        /// 文件类型
+        /// </summary>
+        public string ContentType { get; set; }
     }
 }

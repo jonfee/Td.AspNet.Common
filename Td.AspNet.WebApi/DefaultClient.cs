@@ -76,7 +76,7 @@ namespace Td.AspNet.WebApi
             }
 
             IDictionary<string, string> txtParams = new Dictionary<string, string>(parameters);
-            
+
             IDictionary<string, string> urlParams = new Dictionary<string, string>();
             urlParams.Add("PartnerId", partnerid);
             urlParams.Add("Timestamp", DateTime.Now.ToUniversalTime().Ticks.ToString());//时间戳以时间周期数表示
@@ -142,7 +142,7 @@ namespace Td.AspNet.WebApi
                 parameters = new Dictionary<string, string>();
             }
             IDictionary<string, string> txtParams = new Dictionary<string, string>(parameters);
-            
+
             TimeSpan timeSpan = new TimeSpan(DateTime.UtcNow.Ticks);
             IDictionary<string, string> urlParams = new Dictionary<string, string>();
             urlParams.Add("PartnerId", partnerid);
@@ -171,6 +171,7 @@ namespace Td.AspNet.WebApi
                 fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                 fileContent.Headers.ContentDisposition.FileName = file.FileName;
                 fileContent.Headers.ContentDisposition.Name = file.FieldName;
+                fileContent.Headers.ContentDisposition.Parameters.Add(new NameValueHeaderValue("ContentType", file.ContentType.Replace("/", "-")));
 
                 content.Add(fileContent);
             }
