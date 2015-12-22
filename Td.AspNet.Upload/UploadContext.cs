@@ -78,6 +78,11 @@ namespace Td.AspNet.Upload
         private string _uploadFileName = null;
 
         /// <summary>
+        /// 文件媒体类型
+        /// </summary>
+        private string _contentType = null;
+
+        /// <summary>
         /// 文件对象
         /// </summary>
         public IFormFile FormFile { get; private set; }
@@ -156,22 +161,33 @@ namespace Td.AspNet.Upload
         {
             get
             {
-                string contentType = FormFile.ContentType;
-
-                //文件内容信息
-                if (null != HeaderValue && null != HeaderValue.Parameters)
+                if (string.IsNullOrWhiteSpace(_contentType))
                 {
-                    foreach (var p in HeaderValue.Parameters)
+                    //文件内容信息
+                    if (null != HeaderValue && null != HeaderValue.Parameters)
                     {
-                        if (p.Name.Equals("ContentType", StringComparison.OrdinalIgnoreCase))
+                        foreach (var p in HeaderValue.Parameters)
                         {
-                            contentType = p.Value.Replace("-", "/");
-                            break;
+                            if (p.Name.Equals("ContentType", StringComparison.OrdinalIgnoreCase))
+                            {
+                                _contentType = p.Value.Replace("-", "/");
+                                break;
+                            }
                         }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(_contentType))
+                    {
+                        _contentType = FileContentType.GetMimeType(ExtensionName);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(_contentType))
+                    {
+                        _contentType = FormFile.ContentType;
                     }
                 }
 
-                return contentType;
+                return _contentType;
             }
         }
 

@@ -171,7 +171,10 @@ namespace Td.AspNet.WebApi
                 fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                 fileContent.Headers.ContentDisposition.FileName = file.FileName;
                 fileContent.Headers.ContentDisposition.Name = file.FieldName;
-                fileContent.Headers.ContentDisposition.Parameters.Add(new NameValueHeaderValue("ContentType", file.ContentType.Replace("/", "-")));
+                if (!string.IsNullOrWhiteSpace(file.ContentType))
+                {
+                    fileContent.Headers.ContentDisposition.Parameters.Add(new NameValueHeaderValue("ContentType", file.ContentType.Replace("/", "-")));
+                }
 
                 content.Add(fileContent);
             }
