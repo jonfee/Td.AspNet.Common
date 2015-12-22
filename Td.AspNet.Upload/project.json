@@ -1,6 +1,6 @@
 {
   "version": "1.0.0-rc1-12",
-  "description": "文件上传组件",
+  "description": "文件上传公共组件",
   "authors": [ "jonfee" ],
   "tags": [ "" ],
   "projectUrl": "",
