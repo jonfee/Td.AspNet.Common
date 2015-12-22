@@ -3,6 +3,7 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace Td.AspNet.Upload
             if (null != context && context.FormFile.Length > 0 && !string.IsNullOrWhiteSpace(context.WebRootPath))
             {
                 var file = context.FormFile;
-                
+
                 //文件上传的绝对文件夹目录，如：
                 var uploadFullFolder = context.WebRootPath;
 
@@ -91,6 +92,50 @@ namespace Td.AspNet.Upload
 
             return list;
         }
-        
+
+        /// <summary>
+        /// 保存文件队列
+        /// </summary>
+        /// <param name="queueContext">上传文件队列</param>
+        /// <returns></returns>
+        public static async Task<List<UploadResult>> Save(this IEnumerable<UploadContext> queueContext)
+        {
+            List<UploadResult> list = new List<UploadResult>();
+
+            if (null != queueContext && queueContext.Count() > 0)
+            {
+                foreach (var context in queueContext)
+                {
+                    var result = await context.Save();
+
+                    if (null != result) list.Add(result);
+                }
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// 获取上传文件的路径集合，用指定分隔符分隔
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="splitChar">分隔符</param>
+        /// <returns></returns>
+        public static string SplitToString(this IEnumerable<UploadResult> result, char splitChar = ',')
+        {
+            string paths = string.Empty;
+
+            if (null != result && result.Count() > 0)
+            {
+                foreach (var file in result)
+                {
+                    paths += splitChar + file.FilePath;
+                }
+
+                if (paths.StartsWith(splitChar.ToString())) paths = paths.TrimStart(splitChar);
+            }
+
+            return paths;
+        }
     }
 }
