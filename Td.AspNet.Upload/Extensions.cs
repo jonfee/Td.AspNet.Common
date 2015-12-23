@@ -67,7 +67,8 @@ namespace Td.AspNet.Upload
                     FilePath = relFilePath.Replace(@"\", @"/"),
                     FileSize = file.Length,
                     ContentType = context.ContentType,
-                    IsImage = context.IsImage
+                    IsImage = context.IsImage,
+                    OriginalFileName = context.OriginalName
                 };
             }
 
