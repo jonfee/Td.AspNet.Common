@@ -56,7 +56,7 @@ namespace Td.AspNet.Upload
                 {
                     File.Delete(absFileName);
                 }
-
+                
                 //上传
                 await context.FormFile.SaveAsAsync(absFileName);
 
