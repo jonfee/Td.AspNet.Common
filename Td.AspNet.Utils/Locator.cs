@@ -69,5 +69,27 @@ namespace Td.AspNet.Utils
             s = Math.Round(s * 10000) / 10000;
             return s;
         }
+
+        /// <summary>
+        /// 根据经纬度计算距离 范围公里
+        /// 例: 1.6126 => 1.6公里
+        /// </summary>
+        /// <param name="lat1">纬度1</param>
+        /// <param name="lng1">经度1</param>
+        /// <param name="lat2">经度2</param>
+        /// <param name="lng2">经度2</param>
+        /// <returns></returns>
+        public static double GetDistance(float lat1, float lng1, float lat2, float lng2)
+        {
+            double radLat1 = rad(lat1);
+            double radLat2 = rad(lat2);
+            double a = radLat1 - radLat2;
+            double b = rad(lng1) - rad(lng2);
+            double s = 2 * Math.Asin(Math.Sqrt(Math.Pow(Math.Sin(a / 2), 2) +
+             Math.Cos(radLat1) * Math.Cos(radLat2) * Math.Pow(Math.Sin(b / 2), 2)));
+            s = s * EARTH_RADIUS;
+            s = Math.Round(s * 10000) / 10000;
+            return s;
+        }
     }
 }
