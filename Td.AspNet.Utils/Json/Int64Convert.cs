@@ -49,7 +49,7 @@ namespace Td.AspNet.Utils.Json
             {
                 writer.WriteNull();
             }
-            else if (value is Int64)
+            else if (value is Int64 || value is Nullable<Int64>)
             {
                 writer.WriteValue(value.ToString());
             }
