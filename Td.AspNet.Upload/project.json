@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0-rc1-7",
-  "description": "Td.AspNet.Upload Class Library",
+  "version": "1.0.0-rc1-13",
+  "description": "文件上传公共组件",
   "authors": [ "jonfee" ],
-  "tags": [ "" ],
+  "tags": [ "upload" ],
   "projectUrl": "",
   "licenseUrl": "",
   "frameworks": {

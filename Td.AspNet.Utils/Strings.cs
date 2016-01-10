@@ -129,7 +129,7 @@ namespace Td.AspNet.Utils
                     string[] oneParam = pair.Split(new char[] { '=' }, 2);
                     if (oneParam != null && oneParam.Length == 2)
                     {
-                        result.Add(oneParam[0], WebUtility.UrlDecode(oneParam[1])); 
+                        result.Add(oneParam[0], WebUtility.UrlDecode(oneParam[1]));
                     }
                 }
             }

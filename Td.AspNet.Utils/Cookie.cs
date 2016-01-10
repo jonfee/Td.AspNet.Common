@@ -53,8 +53,7 @@ namespace Td.AspNet.Utils
 
                     postData.Append(name);
                     postData.Append("=");
-                    postData.Append(value);//在没有找到asp.net 5中如何URL编码之前直接输出
-                    //postData.Append(HttpUtility.UrlEncode(value, Encoding.UTF8));
+                    postData.Append(System.Net.WebUtility.UrlEncode(value));
                     hasParam = true;
                 }
             }
@@ -67,7 +66,7 @@ namespace Td.AspNet.Utils
             IDictionary<string, string> result = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(cookievalue))
             {
-                string[] pairs = cookievalue.Split(new char[] { '&' });
+                string[] pairs = System.Net.WebUtility.HtmlDecode(cookievalue).Split(new char[] { '&' });
                 if (pairs != null && pairs.Length > 0)
                 {
                     foreach (string pair in pairs)

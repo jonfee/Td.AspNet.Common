@@ -3,6 +3,7 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,30 +27,11 @@ namespace Td.AspNet.Upload
             {
                 var file = context.FormFile;
 
-                //保存后的文件名称
-                var newFileName = context.UploadName;
-
-                if (string.IsNullOrWhiteSpace(newFileName))
-                {
-                    string rnd = GetRandomCode(10);
-                    newFileName = string.Format("{0}{1}", DateTime.Now.ToString("HHmmss"), rnd);
-                }
-
-                //文件内容信息
-                var parsedContentDisposition =
-                      ContentDispositionHeaderValue.Parse(file.ContentDisposition);
-
-                //原始文件名称
-                var originalName = parsedContentDisposition.FileName.Replace("\"", "");
-
-                //文件全名（含扩展名）
-                newFileName = newFileName + Path.GetExtension(originalName);
-
                 //文件上传的绝对文件夹目录，如：
                 var uploadFullFolder = context.WebRootPath;
 
                 //文件相对站点的路径，默认为文件名，如：aa.jpg
-                string relFilePath = newFileName;
+                string relFilePath = context.UploadName;
 
                 if (!string.IsNullOrWhiteSpace(context.UploadFolder))
                 {
@@ -57,11 +39,8 @@ namespace Td.AspNet.Upload
                     uploadFullFolder = Path.Combine(context.WebRootPath, context.UploadFolder);
 
                     //更新文件相对站点的路径，如：\\upload\\photo\\aa.jpg
-                    relFilePath = Path.Combine(context.UploadFolder, newFileName);
+                    relFilePath = Path.Combine(context.UploadFolder, context.UploadName);
                 }
-
-                //文件在磁盘中的路径，如：D:\\WebSite\\wwwroot\\upload\\photo\\aa.jpg
-                string absFileName = Path.Combine(context.WebRootPath, relFilePath);
 
                 //文件夹不存在,则创建
                 if (!Directory.Exists(context.UploadFolder))
@@ -69,16 +48,27 @@ namespace Td.AspNet.Upload
                     Directory.CreateDirectory(context.UploadFolder);
                 }
 
+                //文件在磁盘中的路径，如：D:\\WebSite\\wwwroot\\upload\\photo\\aa.jpg
+                string absFileName = Path.Combine(context.WebRootPath, relFilePath);
+
+                //存在同名文件且需要覆盖时删除原文件
+                if (File.Exists(absFileName) && context.BeOverride)
+                {
+                    File.Delete(absFileName);
+                }
+                
+                //上传
                 await context.FormFile.SaveAsAsync(absFileName);
 
                 result = new UploadResult
                 {
-                    FieldName = parsedContentDisposition.Name,
-                    FileName = newFileName,
+                    FieldName = context.FiledName,
+                    FileName = context.UploadName,
                     FilePath = relFilePath.Replace(@"\", @"/"),
                     FileSize = file.Length,
-                    ContentType = file.ContentType,
-                    IsImage = file.ContentType.IsImage()
+                    ContentType = context.ContentType,
+                    IsImage = context.IsImage,
+                    OriginalFileName = context.OriginalName
                 };
             }
 
@@ -105,55 +95,48 @@ namespace Td.AspNet.Upload
         }
 
         /// <summary>
-        /// 判断文件类型是否为图片
+        /// 保存文件队列
         /// </summary>
-        /// <param name="contentType"></param>
+        /// <param name="queueContext">上传文件队列</param>
         /// <returns></returns>
-        private static bool IsImage(this string contentType)
+        public static async Task<List<UploadResult>> Save(this IEnumerable<UploadContext> queueContext)
         {
-            if (!string.IsNullOrWhiteSpace(contentType))
+            List<UploadResult> list = new List<UploadResult>();
+
+            if (null != queueContext && queueContext.Count() > 0)
             {
-                return contentType.ToLower().StartsWith("image/");
+                foreach (var context in queueContext)
+                {
+                    var result = await context.Save();
+
+                    if (null != result) list.Add(result);
+                }
             }
 
-            return false;
+            return list;
         }
 
         /// <summary>
-        /// 生成随机码
+        /// 获取上传文件的路径集合，用指定分隔符分隔
         /// </summary>
-        /// <param name="length"></param>
+        /// <param name="result"></param>
+        /// <param name="splitChar">分隔符</param>
         /// <returns></returns>
-        private static string GetRandomCode(int length)
+        public static string SplitToString(this IEnumerable<UploadResult> result, char splitChar = ',')
         {
-            string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+            string paths = string.Empty;
 
-            StringBuilder sb = new StringBuilder(length);
-
-            for (var i = 0; i < length; i++)
+            if (null != result && result.Count() > 0)
             {
-                int index = new Random(Guid.NewGuid().GetHashCode()).Next(0, chars.Length);
+                foreach (var file in result)
+                {
+                    paths += splitChar + file.FilePath;
+                }
 
-                sb.Append(chars[index]);
+                if (paths.StartsWith(splitChar.ToString())) paths = paths.TrimStart(splitChar);
             }
 
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 流转换为byte数组
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        private static byte[] ConvertToByteBuffer(this Stream stream)
-        {
-            int b;
-            System.IO.MemoryStream tempStream = new System.IO.MemoryStream();
-            while ((b = stream.ReadByte()) != -1)
-            {
-                tempStream.WriteByte(((byte)b));
-            }
-            return tempStream.ToArray();
+            return paths;
         }
     }
 }
