@@ -32,7 +32,7 @@ namespace Td.AspNet.Utils.Json
 
             try
             {
-                if (reader.TokenType == JsonToken.String && (reader.Value is Int64 || reader.Value is Nullable<Int64>))
+                if (reader.TokenType == JsonToken.String)
                 {
                     return Int64.Parse(reader.Value.ToString());
                 }
