@@ -32,10 +32,11 @@ namespace Td.AspNet.Utils.Json
 
             try
             {
-                if (reader.TokenType == JsonToken.String)
-                {
-                    return Int64.Parse(reader.Value.ToString());
-                }
+                long temp = 0;
+
+                Int64.TryParse(reader.Value.ToString(), out temp);
+
+                return temp;
             }
             catch
             {
