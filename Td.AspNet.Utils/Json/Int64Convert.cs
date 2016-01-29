@@ -10,7 +10,8 @@ namespace Td.AspNet.Utils.Json
     {
         public override bool CanConvert(Type objectType)
         {
-            return Type.GetTypeFromHandle(objectType.TypeHandle) == typeof(Int64);
+            var type = Type.GetTypeFromHandle(objectType.TypeHandle);
+            return type == typeof(Int64) || type == typeof(Nullable<Int64>);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -31,10 +32,11 @@ namespace Td.AspNet.Utils.Json
 
             try
             {
-                if (reader.TokenType == JsonToken.String && reader.Value is Int64)
-                {
-                    return Int64.Parse(reader.Value.ToString());
-                }
+                long temp = 0;
+
+                Int64.TryParse(reader.Value.ToString(), out temp);
+
+                return temp;
             }
             catch
             {

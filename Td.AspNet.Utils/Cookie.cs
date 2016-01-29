@@ -66,7 +66,7 @@ namespace Td.AspNet.Utils
             IDictionary<string, string> result = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(cookievalue))
             {
-                string[] pairs = System.Net.WebUtility.HtmlDecode(cookievalue).Split(new char[] { '&' });
+                string[] pairs = System.Net.WebUtility.UrlDecode(cookievalue).Split(new char[] { '&' });
                 if (pairs != null && pairs.Length > 0)
                 {
                     foreach (string pair in pairs)
