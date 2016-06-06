@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -35,6 +34,7 @@ namespace Td.AspNet.Utils
             }
             return EnText.ToString();
         }
+
         /// <summary>
         /// Hash 加密采用的算法
         /// </summary>
@@ -46,22 +46,16 @@ namespace Td.AspNet.Utils
             SHA256,
             SHA384,
             SHA512
-        };
-
-        /// <summary>
-        /// 对称加密采用的算法
-        /// </summary>
-        public enum SymmetricFormat
-        {
-            DES,
-            TripleDES
-        };
+        }
 
         /// <summary>
         /// 对字符串进行 Hash 加密
         /// </summary>
         public static string Hash(string inputString, HashFormat hashFormat)
         {
+#if !DNX451
+            throw new NotSupportedException("This method can not support .Net Core!");
+#else
             HashAlgorithm algorithm = null;
 
             switch (hashFormat)
@@ -96,87 +90,7 @@ namespace Td.AspNet.Utils
             {
                 return BitConverter.ToString(algorithm.Hash).Replace("-", "").ToUpper();
             }
-        }
-
-        /// <summary>
-        /// 对字符串进行对称加密
-        /// </summary>
-        public static string SymmetricEncrypt(string inputString, SymmetricFormat symmetricFormat, string key, string iv)
-        {
-            SymmetricAlgorithm algorithm = null;
-
-            switch (symmetricFormat)
-            {
-                case SymmetricFormat.DES:
-                    algorithm = DES.Create();
-                    break;
-                case SymmetricFormat.TripleDES:
-                    algorithm = TripleDES.Create();
-                    break;
-            }
-
-            int keySize = algorithm.Key.Length;
-
-            byte[] desString = Encoding.UTF8.GetBytes(inputString);
-
-            byte[] desKey = Encoding.UTF8.GetBytes(key.Substring(0, keySize));
-
-            byte[] desIV = Encoding.UTF8.GetBytes(iv.Substring(0, keySize));
-
-            MemoryStream mStream = new MemoryStream();
-
-            CryptoStream cStream = new CryptoStream(mStream, algorithm.CreateEncryptor(desKey, desIV), CryptoStreamMode.Write);
-
-            cStream.Write(desString, 0, desString.Length);
-
-            cStream.FlushFinalBlock();
-
-            cStream.Close();
-
-            return BitConverter.ToString(mStream.ToArray()).Replace("-", "").ToUpper();
-        }
-
-        /// <summary>
-        /// 对字符串进行对称解密
-        /// </summary>
-        public static string SymmetricDecrypt(string inputString, SymmetricFormat symmetricFormat, string key, string iv)
-        {
-            SymmetricAlgorithm algorithm = null;
-
-            switch (symmetricFormat)
-            {
-                case SymmetricFormat.DES:
-                    algorithm = DES.Create();
-                    break;
-                case SymmetricFormat.TripleDES:
-                    algorithm = TripleDES.Create();
-                    break;
-            }
-
-            int keySize = algorithm.Key.Length;
-
-            byte[] desString = new byte[inputString.Length / 2];
-
-            for (int i = 0; i < inputString.Length; i += 2)
-            {
-                desString[i / 2] = byte.Parse(inputString.Substring(i, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
-            }
-
-            byte[] desKey = Encoding.UTF8.GetBytes(key.Substring(0, keySize));
-
-            byte[] desIV = Encoding.UTF8.GetBytes(iv.Substring(0, keySize));
-
-            MemoryStream mStream = new MemoryStream();
-
-            CryptoStream cStream = new CryptoStream(mStream, algorithm.CreateDecryptor(desKey, desIV), CryptoStreamMode.Write);
-
-            cStream.Write(desString, 0, desString.Length);
-
-            cStream.FlushFinalBlock();
-
-            cStream.Close();
-
-            return Encoding.UTF8.GetString(mStream.ToArray());
+#endif
         }
 
     }
