@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNet.Http;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 
 namespace Td.AspNet.Upload
