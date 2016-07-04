@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Internal;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 
 namespace Td.AspNet.Utils
 {
@@ -10,9 +11,13 @@ namespace Td.AspNet.Utils
     {
         public static IDictionary<string, string> Get(HttpContext context, string name)
         {
-            var cookies = (RequestCookiesCollection)context.Request.Cookies;
-            var content = cookies.Get(name);
-            return CookieDic(content);
+            var cookies = context.Request.Cookies;
+            string value;
+
+            cookies.TryGetValue(name, out value);
+
+            //var content = cookies.Get(name);
+            return CookieDic(value);
         }
 
         public static void Save(HttpContext context, string name, IDictionary<string, string> values)

@@ -1,4 +1,5 @@
-﻿using Microsoft.Framework.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
+
 
 namespace Td.AspNet.Utils
 {

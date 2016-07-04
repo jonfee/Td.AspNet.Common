@@ -53,9 +53,7 @@ namespace Td.AspNet.Utils
         /// </summary>
         public static string Hash(string inputString, HashFormat hashFormat)
         {
-#if !DNX451
-            throw new NotSupportedException("This method can not support .Net Core!");
-#else
+
             HashAlgorithm algorithm = null;
 
             switch (hashFormat)
@@ -80,17 +78,17 @@ namespace Td.AspNet.Utils
                     break;
             }
 
-            algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+            var bytes = algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
 
             if (hashFormat == HashFormat.MD516)
             {
-                return BitConverter.ToString(algorithm.Hash).Replace("-", "").Substring(8, 16).ToUpper();
+                return BitConverter.ToString(bytes).Replace("-", "").Substring(8, 16).ToUpper();
             }
             else
             {
-                return BitConverter.ToString(algorithm.Hash).Replace("-", "").ToUpper();
+                return BitConverter.ToString(bytes).Replace("-", "").ToUpper();
             }
-#endif
+
         }
 
     }
