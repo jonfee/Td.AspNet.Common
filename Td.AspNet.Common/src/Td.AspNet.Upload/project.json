@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "1.1.2",
 
   "dependencies": {
     "Microsoft.AspNetCore.Http.Features": "1.0.0",
@@ -8,6 +8,8 @@
   },
 
   "frameworks": {
+    "net452": {},
+    "net46": {},
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
