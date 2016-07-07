@@ -59,7 +59,7 @@ namespace Td.AspNet.Upload
 
 
                 //上传
-                await context.FormFile.OpenReadStream().SaveAsAsync(absFileName);
+                await context.FormFile.CopyToAsync(new FileStream(absFileName, FileMode.Create));
 
                 result = new UploadResult
                 {
