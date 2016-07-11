@@ -53,9 +53,13 @@ namespace Td.AspNet.Upload
                     File.Delete(absFileName);
                 }
 
-
+                using (FileStream fs = File.Create(absFileName))
+                {
+                    await context.FormFile.CopyToAsync(fs);
+                    fs.Flush();
+                }
                 //上传
-                await context.FormFile.CopyToAsync(new FileStream(absFileName, FileMode.Create));
+                //await context.FormFile.CopyToAsync(new FileStream(absFileName, FileMode.Create));
 
                 result = new UploadResult
                 {
