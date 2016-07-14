@@ -1,10 +1,11 @@
-﻿{
-  "version": "1.1.4",
+{
+  "version": "1.1.5",
 
   "dependencies": {
     "Microsoft.AspNetCore.Http.Features": "1.0.0",
     "Microsoft.Net.Http.Headers": "1.0.0",
-    "NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "1.6.0",
+    "Newtonsoft.Json": "7.0.1"
   },
 
   "frameworks": {
