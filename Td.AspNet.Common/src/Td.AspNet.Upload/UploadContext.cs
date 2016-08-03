@@ -57,14 +57,15 @@ namespace Td.AspNet.Upload
         /// <param name="uploadName">重命名后的文件名称（为null时随机生成）</param>
         /// <param name="extensionName">扩展名（如：jpg）</param>
         /// <param name="beOverride">存在同名文件时是否覆盖</param>
-        public UploadContext(IFormFile file, string webrootPath, string uploadFolder, string uploadName, string extensionName, bool beOverride)
+        public UploadContext(IFormFile file, string webrootPath, string uploadFolder, string uploadName, string extensionName, bool beOverride, SaveAfterOutputType outputType = SaveAfterOutputType.FilePath)
         {
             this.FormFile = file;
             this.UploadFolder = uploadFolder;
             this._uploadFileName = uploadName;
             this._extension = extensionName;
             this.WebRootPath = webrootPath;
-            this.BeOverride = BeOverride;
+            this.BeOverride = beOverride;
+            this.OutputType = outputType;
         }
 
         /// <summary>
@@ -101,6 +102,11 @@ namespace Td.AspNet.Upload
         /// 存在同名文件时覆盖
         /// </summary>
         public bool BeOverride { get; private set; }
+
+        /// <summary>
+        /// 文件保存后输出格式类型
+        /// </summary>
+        public SaveAfterOutputType OutputType { get; private set; }
 
         #region 只读属性
 

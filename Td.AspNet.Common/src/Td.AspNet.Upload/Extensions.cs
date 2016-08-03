@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,11 +54,25 @@ namespace Td.AspNet.Upload
                     File.Delete(absFileName);
                 }
 
+                string base64Content = null;
+
                 using (FileStream fs = File.Create(absFileName))
                 {
                     await context.FormFile.CopyToAsync(fs);
+
+                    if (context.OutputType == SaveAfterOutputType.Base64)
+                    {
+                        byte[] arr = new byte[fs.Length];
+                        fs.Position = 0;
+                        fs.Read(arr, 0, (int)fs.Length);
+
+                        base64Content = Convert.ToBase64String(arr);
+                    }
+
                     fs.Flush();
+                    fs.Dispose();
                 }
+
                 //上传
                 //await context.FormFile.CopyToAsync(new FileStream(absFileName, FileMode.Create));
 
@@ -69,7 +84,8 @@ namespace Td.AspNet.Upload
                     FileSize = file.Length,
                     ContentType = context.ContentType,
                     IsImage = context.IsImage,
-                    OriginalFileName = context.OriginalName
+                    OriginalFileName = context.OriginalName,
+                    Base64Content = base64Content
                 };
             }
 

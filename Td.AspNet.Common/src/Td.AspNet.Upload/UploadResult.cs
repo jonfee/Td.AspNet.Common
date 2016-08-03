@@ -44,5 +44,10 @@ namespace Td.AspNet.Upload
         /// 上传后的文件路径
         /// </summary>
         public string FilePath { get; set; }
+
+        /// <summary>
+        /// Base64内容
+        /// </summary>
+        public string Base64Content { get; set; }
     }
 }
