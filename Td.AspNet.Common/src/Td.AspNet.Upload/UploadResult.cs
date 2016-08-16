@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Td.AspNet.Upload
+﻿namespace Td.AspNet.Upload
 {
     /// <summary>
     /// 文件上传结果类
@@ -14,11 +9,6 @@ namespace Td.AspNet.Upload
         /// 表单字段名
         /// </summary>
         public string FieldName { get; set; }
-
-        /// <summary>
-        /// 原始文件名
-        /// </summary>
-        public string OriginalFileName { get; set; }
 
         /// <summary>
         /// 文件大小
@@ -46,8 +36,8 @@ namespace Td.AspNet.Upload
         public string FilePath { get; set; }
 
         /// <summary>
-        /// Base64内容
+        /// 消息
         /// </summary>
-        public string Base64Content { get; set; }
+        public string Message { get; set; }
     }
 }

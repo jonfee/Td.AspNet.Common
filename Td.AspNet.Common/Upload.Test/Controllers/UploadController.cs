@@ -20,13 +20,17 @@ namespace Upload.Test.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(IFormFile files)
+        public IActionResult Index(int a)
         {
-            UploadContext upContext = new UploadContext(files, Startup.UploadRoot, "base64", null, null, true, SaveAfterOutputType.Base64);
+            var files = HttpContext.Request.Form.Files;
+
+            UploadContext upContext = new UploadContext("http://localhost:27102/api/uploadify", files, null, 0, "/upload/test", false, "abc", null, false, 100L, 720, 720, false);
 
             var result = upContext.Save().Result;
 
-            return Content(result.Base64Content);
+            string paths = string.Join(",", result.Select(p => p.FilePath).ToArray());
+
+            return Content(paths);
         }
     }
 }

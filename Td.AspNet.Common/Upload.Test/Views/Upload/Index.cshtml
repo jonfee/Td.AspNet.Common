@@ -4,7 +4,9 @@
 <div>
     @using (Html.BeginForm(FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <input type="file" id="files" name="files" />
+        <input type="file" id="filetest" name="file1" />
+        <input type="file" id="filetest" name="file2" />
+        <input type="file" id="filetest" name="file3" />
         <input type="submit" value="上传" />
     }
 </div>

@@ -12,7 +12,6 @@ namespace Upload.Test
 {
     public class Startup
     {
-        public static string UploadRoot;
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -27,8 +26,6 @@ namespace Upload.Test
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
             Configuration = builder.Build();
-
-            UploadRoot = env.ContentRootPath;
         }
 
         public IConfigurationRoot Configuration { get; }
