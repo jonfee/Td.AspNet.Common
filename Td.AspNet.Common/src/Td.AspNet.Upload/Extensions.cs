@@ -31,7 +31,10 @@ namespace Td.AspNet.Upload
             //处理文件上传
             using (var postContent = new MultipartFormDataContent())
             {
-                //遍历上传文件对象
+                //实际有效上传的文件数
+                int effectCount = 0;
+
+                #region 1、//遍历上传文件对象
                 foreach (var fc in context.FormFileList)
                 {
                     #region//预定义上传结果
@@ -52,6 +55,12 @@ namespace Td.AspNet.Upload
                         itemRst.Message = "文件对象不存在";
                     }
                     #endregion
+                    #region//文件大小限制检测
+                    else if (context.MaxSize > 0 && fc.FormFile.Length > context.MaxSize * 1024)
+                    {
+                        itemRst.Message = string.Format("上传文件最大不能超过{0}KB", context.MaxSize);
+                    }
+                    #endregion
                     #region//文件格式限制检测
                     else if (context.Filter != null && context.Filter.Length > 0)
                     {
@@ -65,73 +74,77 @@ namespace Td.AspNet.Upload
                         }
                     }
                     #endregion
-                    #region//文件大小限制检测
-                    else if (context.MaxSize > 0 && fc.FormFile.Length > context.MaxSize * 1024)
-                    {
-                        itemRst.Message = string.Format("上传文件最大不能超过{0}KB", context.MaxSize);
-                    }
-                    #endregion
+
                     #region//文件正常，则添加文件对象到Post数据
-                    else
+                    if (string.IsNullOrWhiteSpace(itemRst.Message))
                     {
                         StreamContent fileContent = new StreamContent(fc.FormFile.OpenReadStream());//文件流
-                        fileContent.Headers.ContentType = new MediaTypeHeaderValue(fc.FormFile.ContentType);//文件内容类型
+                        fileContent.Headers.ContentType = new MediaTypeHeaderValue(fc.ContentType);//文件内容类型
                         fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");//form-data表示一个表单对象数据
                         fileContent.Headers.ContentDisposition.FileName = fc.FormFile.FileName;//文件名
                         fileContent.Headers.ContentDisposition.Name = fc.FieldName;//文件标识字段名称
 
                         postContent.Add(fileContent);
+
+                        effectCount++;
                     }
                     #endregion
 
                     result.Add(itemRst);
                 }
 
-                #region 加入其它参数及值到Post数据
-                postContent.Add(new StringContent(context.UploadFolder), "savepath");
-                postContent.Add(new StringContent(context.IsFixedPath.ToString()), "fixedpath");
-                postContent.Add(new StringContent(context.UploadName), "name");
-                postContent.Add(new StringContent(context.SaveExtension), "extension");
-                postContent.Add(new StringContent(context.BeOverride.ToString()), "beOverride");
-                postContent.Add(new StringContent(context.CompressIfGreaterSize.ToString()), "compressIfGreaterSize");
-                postContent.Add(new StringContent(context.MaxWidth.ToString()), "maxWidth");
-                postContent.Add(new StringContent(context.MaxHeight.ToString()), "maxHeight");
-                postContent.Add(new StringContent(context.CutIfOut.ToString()), "cutIfOut");
                 #endregion
 
-                //定义一个上传文件返回结果变量
-                List<UploadBackResult> backData = null;
-
-                #region//文件Post上传
-                using (HttpClient client = new HttpClient())
+                #region 2、//如果存在有效文件上传，则请求到上传接口
+                if (effectCount > 0)
                 {
-                    var response = await client.PostAsync(context.ApiAddress, postContent);
-                    //确保HTTP成功状态值
-                    response.EnsureSuccessStatusCode();
+                    #region 加入其它参数及值到Post数据
+                    postContent.Add(new StringContent(context.UploadFolder), "savepath");
+                    postContent.Add(new StringContent(context.IsFixedPath.ToString()), "fixedpath");
+                    postContent.Add(new StringContent(context.UploadName), "name");
+                    postContent.Add(new StringContent(context.SaveExtension), "extension");
+                    postContent.Add(new StringContent(context.BeOverride.ToString()), "beOverride");
+                    postContent.Add(new StringContent(context.CompressIfGreaterSize.ToString()), "compressIfGreaterSize");
+                    postContent.Add(new StringContent(context.MaxWidth.ToString()), "maxWidth");
+                    postContent.Add(new StringContent(context.MaxHeight.ToString()), "maxHeight");
+                    postContent.Add(new StringContent(context.CutIfOut.ToString()), "cutIfOut");
+                    #endregion
 
-                    string strContent = await response.Content.ReadAsStringAsync();
+                    //定义一个上传文件返回结果变量
+                    List<UploadBackResult> backData = null;
 
-                    try
+                    #region//文件Post上传
+                    using (HttpClient client = new HttpClient())
                     {
-                        backData = JsonConvert.DeserializeObject<List<UploadBackResult>>(strContent) ?? new List<UploadBackResult>();
-                    }
-                    catch
-                    {
-                        backData = new List<UploadBackResult>();
-                    }
-                }
-                #endregion
+                        var response = await client.PostAsync(context.ApiAddress, postContent);
+                        //确保HTTP成功状态值
+                        response.EnsureSuccessStatusCode();
 
-                #region//上传结果处理
-                foreach (var rst in result)
-                {
-                    var upRst = backData.Where(p => p.FieldName == rst.FieldName).FirstOrDefault();
+                        string strContent = await response.Content.ReadAsStringAsync();
 
-                    if (null != upRst)
-                    {
-                        rst.FilePath = upRst.FilePath;
-                        rst.Message = upRst.Message;
+                        try
+                        {
+                            backData = JsonConvert.DeserializeObject<List<UploadBackResult>>(strContent) ?? new List<UploadBackResult>();
+                        }
+                        catch
+                        {
+                            backData = new List<UploadBackResult>();
+                        }
                     }
+                    #endregion
+
+                    #region//上传结果处理
+                    foreach (var rst in result)
+                    {
+                        var upRst = backData.Where(p => p.FieldName == rst.FieldName).FirstOrDefault();
+
+                        if (null != upRst)
+                        {
+                            rst.FilePath = upRst.FilePath;
+                            rst.Message = upRst.Message;
+                        }
+                    }
+                    #endregion
                 }
                 #endregion
             }
