@@ -17,7 +17,7 @@ namespace Td.AspNet.Upload
 
         /// <summary>
         /// 实始化文件上传内容实例（自动随机生成文件名称）
-        /// </summary
+        /// </summary>
         /// <param name="apiAddress">上传API地址</param>
         /// <param name="file">待上传的文件</param>
         /// <param name="filter">允许上传的文件格式（多个用"|"分隔），如：jpg|gif|doc</param>
@@ -79,7 +79,7 @@ namespace Td.AspNet.Upload
 
         /// <summary>
         /// 实始化文件上传内容实例（自动随机生成文件名称）
-        /// </summary
+        /// </summary>
         /// <param name="apiAddress">上传API地址</param>
         /// <param name="files">待上传的文件</param>
         /// <param name="filter">允许上传的文件格式（多个用"|"分隔），如：jpg|gif|doc</param>
@@ -175,9 +175,21 @@ namespace Td.AspNet.Upload
 
         /// <summary>
         /// 实始化文件上传内容实例（自动随机生成文件名称）
-        /// </summary
+        /// </summary>
         /// <param name="apiAddress">上传API地址</param>
-        /// <param name="base64String">待上传的文件标志字段及Base64字符串</param>
+        /// <param name="fieldName">上传的文件标志字段名称</param>
+        /// <param name="base64String">上传文件的Base64内容</param>
+        /// <param name="maxSize">最大允许上传的文件大小（单位：KB）</param>
+        /// <param name="uploadFolder">需保存的文件夹路径（从根路径后）</param>
+        /// <param name="isFixedPath">是否固定存储在指定的<paramref name="uploadFolder"/>目录下，为false时在<paramref name="uploadFolder"/>目录后添加日期目录</param>
+        public UploadContext(string apiAddress, string fieldName, string base64String, long maxSize, string uploadFolder, bool isFixedPath)
+            : this(apiAddress, new KeyValuePair<string, string>(fieldName, base64String), maxSize, uploadFolder, isFixedPath, null) { }
+
+        /// <summary>
+        /// 实始化文件上传内容实例（自动随机生成文件名称）
+        /// </summary>
+        /// <param name="apiAddress">上传API地址</param>
+        /// <param name="fieldAndBase64String">待上传的文件标志字段及Base64字符串</param>
         /// <param name="maxSize">最大允许上传的文件大小（单位：KB）</param>
         /// <param name="uploadFolder">需保存的文件夹路径（从根路径后）</param>
         /// <param name="isFixedPath">是否固定存储在指定的<paramref name="uploadFolder"/>目录下，为false时在<paramref name="uploadFolder"/>目录后添加日期目录</param>
@@ -188,7 +200,7 @@ namespace Td.AspNet.Upload
         /// 实始化文件上传内容实例（存在同名文件时不覆盖）
         /// </summary>
         /// <param name="apiAddress">上传API地址</param>
-        /// <param name="base64String">待上传的文件标志字段及Base64字符串</param>
+        /// <param name="fieldAndBase64String">待上传的文件标志字段及Base64字符串</param>
         /// <param name="maxSize">最大允许上传的文件大小（单位：KB）</param>
         /// <param name="uploadFolder">需保存的文件夹路径（从根路径后）</param>
         /// <param name="isFixedPath">是否固定存储在指定的<paramref name="uploadFolder"/>目录下，为false时在<paramref name="uploadFolder"/>目录后添加日期目录</param>
@@ -233,7 +245,7 @@ namespace Td.AspNet.Upload
 
         /// <summary>
         /// 实始化文件上传内容实例（自动随机生成文件名称）
-        /// </summary
+        /// </summary>
         /// <param name="apiAddress">上传API地址</param>
         /// <param name="fieldAndBase64Strings">待上传的文件标志字段名称及Base64字符串集合</param>
         /// <param name="maxSize">最大允许上传的文件大小（单位：KB）</param>
@@ -331,11 +343,11 @@ namespace Td.AspNet.Upload
         {
             if (files != null && files.Count() > 0)
             {
-               var newFiles= files.Where(file => file != null && file.Length > 0)
-                .Select(file => new FormFileContent
-                {
-                    FormFile = file
-                }).ToList<FileContent>();
+                var newFiles = files.Where(file => file != null && file.Length > 0)
+                 .Select(file => new FormFileContent
+                 {
+                     FormFile = file
+                 }).ToList<FileContent>();
 
                 this.FileList.AddRange(newFiles);
             }
