@@ -1,5 +1,5 @@
 {
-  "version": "2.2.2",
+  "version": "2.2.3",
   "dependencies": {
     "Microsoft.AspNetCore.Http.Features": "1.0.0",
     "Microsoft.Net.Http.Headers": "1.0.0",

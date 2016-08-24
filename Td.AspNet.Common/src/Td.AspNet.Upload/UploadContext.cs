@@ -481,7 +481,6 @@ namespace Td.AspNet.Upload
         /// 上传文件名
         /// </summary>
         public string UploadName { get; private set; }
-
         #endregion
     }
 
@@ -613,6 +612,8 @@ namespace Td.AspNet.Upload
     /// </summary>
     public class Base64FileContent : FileContent
     {
+        private Regex _regexBase64 = new Regex(@"^data:(?<contenttype>[^;]+);base64,(?<content>.+)$", RegexOptions.IgnoreCase);
+
         /// <summary>
         /// 标准的Base64文件字符串表示,如：“data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATgAAAE4==”
         /// </summary>
@@ -641,9 +642,7 @@ namespace Td.AspNet.Upload
             {
                 if (string.IsNullOrWhiteSpace(_contentType) && !string.IsNullOrWhiteSpace(Data))
                 {
-                    Regex reg = new Regex(@"^data:(?<contenttype>[^;]+);base64,.+=+$", RegexOptions.IgnoreCase);
-
-                    Match m = reg.Match(Data);
+                    Match m = _regexBase64.Match(Data);
 
                     if (m.Success)
                     {
@@ -665,9 +664,7 @@ namespace Td.AspNet.Upload
             {
                 if (_fileSize == 0)
                 {
-                    Regex reg = new Regex(@"^data:(?<contenttype>[^;]+);base64,(?<content>.+=+)$", RegexOptions.IgnoreCase);
-
-                    Match m = reg.Match(Data);
+                    Match m = _regexBase64.Match(Data);
 
                     if (m.Success)
                     {
