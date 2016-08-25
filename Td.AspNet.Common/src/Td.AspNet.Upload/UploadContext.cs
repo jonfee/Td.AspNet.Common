@@ -153,6 +153,8 @@ namespace Td.AspNet.Upload
                     FormFile = file
                 }).ToList<FileContent>();
 
+            CheckFiledName();
+
             //格式限制
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -314,6 +316,8 @@ namespace Td.AspNet.Upload
                 FieldName = p.Key,
                 Data = p.Value,
             }).ToList<FileContent>();
+
+            CheckFiledName();
         }
 
         #endregion
@@ -332,6 +336,8 @@ namespace Td.AspNet.Upload
                 {
                     FormFile = file
                 });
+
+                CheckFiledName();
             }
         }
 
@@ -350,6 +356,8 @@ namespace Td.AspNet.Upload
                  }).ToList<FileContent>();
 
                 this.FileList.AddRange(newFiles);
+
+                CheckFiledName();
             }
         }
 
@@ -369,6 +377,8 @@ namespace Td.AspNet.Upload
                     FieldName = fieldName,
                     Data = base64String,
                 });
+
+                CheckFiledName();
             }
         }
 
@@ -385,6 +395,8 @@ namespace Td.AspNet.Upload
                     FieldName = fieldAndBase64String.Key,
                     Data = fieldAndBase64String.Value,
                 });
+
+                CheckFiledName();
             }
         }
 
@@ -403,7 +415,28 @@ namespace Td.AspNet.Upload
                 }).ToList<FileContent>();
 
                 this.FileList.AddRange(files);
+
+                CheckFiledName();
             }
+        }
+
+        /// <summary>
+        /// 校正文件标志名
+        /// </summary>
+        private void CheckFiledName()
+        {
+            //原文件使用的标志名
+            var fields = this.FileList.Select(p => p.FieldName).ToArray();
+
+            this.FileList.ForEach((item) =>
+            {
+                int counts = fields.Where(p => p.Equals(item.FieldName, StringComparison.OrdinalIgnoreCase)).Count();
+
+                if (counts > 1)
+                {
+                    item.FieldName += new Random(Guid.NewGuid().GetHashCode()).Next(10000000, 99999999).ToString();
+                }
+            });
         }
 
         #endregion
@@ -544,7 +577,7 @@ namespace Td.AspNet.Upload
                 if (string.IsNullOrWhiteSpace(_fieldName) && FormFile != null)
                 {
                     var _headerValue = ContentDispositionHeaderValue.Parse(FormFile.ContentDisposition);
-                    _fieldName = _headerValue?.Name ?? string.Empty;
+                    _fieldName = _headerValue?.Name.Replace(@"""", "") ?? string.Empty;
                 }
 
                 return _fieldName;
