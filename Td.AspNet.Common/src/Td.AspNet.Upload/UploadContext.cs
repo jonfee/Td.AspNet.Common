@@ -577,7 +577,15 @@ namespace Td.AspNet.Upload
                 if (string.IsNullOrWhiteSpace(_fieldName) && FormFile != null)
                 {
                     var _headerValue = ContentDispositionHeaderValue.Parse(FormFile.ContentDisposition);
-                    _fieldName = _headerValue?.Name.Replace(@"""", "") ?? string.Empty;
+                    _fieldName = _headerValue?.Name;
+                    if (string.IsNullOrWhiteSpace(_fieldName))
+                    {
+                        _fieldName = "file_" + new Random(Guid.NewGuid().GetHashCode()).Next(100000, 999999);
+                    }
+                    else
+                    {
+                        _fieldName = _fieldName.Replace(@"""", "");
+                    }
                 }
 
                 return _fieldName;
@@ -660,7 +668,11 @@ namespace Td.AspNet.Upload
         {
             get
             {
-                return _fieldName ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(_fieldName))
+                {
+                    _fieldName = "filebase64_" + new Random(Guid.NewGuid().GetHashCode()).Next(100000, 999999);
+                }
+                return _fieldName;
             }
             set { _fieldName = value; }
         }
